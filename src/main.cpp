@@ -1,9 +1,9 @@
 //============================================================================
 // Name        : physics.cpp
-// Author      : 
+// Author      : Alles Rebel
 // Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
+// Copyright   : none i guess?
+// Description : Vector Based Physics Engine Testing
 //============================================================================
 
 #include <iostream>

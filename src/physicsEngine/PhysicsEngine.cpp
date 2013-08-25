@@ -51,6 +51,7 @@ Vec2 PhysicsEngine::makeUnitVector(Vec2 a) {
 	return a;
 }
 
+
 /*
  * Returns the normal unit vector assuming clockwise rotation
  */
