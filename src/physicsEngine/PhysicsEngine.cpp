@@ -68,29 +68,12 @@ Vec2 PhysicsEngine::getNormal(Vec2 a, Vec2 b) {
 	return newVector;
 }
 
-/*
- * Both important comparison operators == and !=
- */
-bool Vec2::operator ==(const Vec2& rhs) {
-	if (this->x - rhs.x >= FLT_EPSILON)
-		return false;
-	if (this->y - rhs.y >= FLT_EPSILON)
-		return false;
-	return true;
-}
-bool Vec2::operator !=(const Vec2& rhs) {
-	if (this->x - rhs.x >= FLT_EPSILON)
-		return true;
-	if (this->y - rhs.y >= FLT_EPSILON)
-		return true;
-	return false;
-}
 
 /*
- * Get magnitude of a 2D vector
+ * Standard 2D Dot Product
  */
-float Vec2::getMagnitude() {
-	return sqrt(pow(x, 2) + pow(y, 2));
+float PhysicsEngine::dot(Vec2 a, Vec2 b){
+	return a.x * b.x + a.y * b.y;
 }
 
 /*

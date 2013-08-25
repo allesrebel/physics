@@ -7,10 +7,12 @@
 //============================================================================
 
 #include <iostream>
-#include <SDL/SDL.h>
 #include <cfloat>
 
-#include "physicsEngine/PhysicsEngine.h"
+#include "include/datatypes.h"				//primitive data types, and containers
+#include "physicsEngine/PhysicsEngine.h"	//physics engine
+#include "graphicsEngine/GraphicsEngine.h"	//graphics engine (just for testing)
+#include "gameEngine/GameEngine.h"			//game engine
 
 using namespace std;
 
@@ -18,6 +20,7 @@ void testDistance();
 void testNormals();
 void testMagnitude();
 void testCollisions();
+void testDotProduct();
 void testVectorMath();
 
 int main(int argc, char* args[]) {
@@ -27,6 +30,10 @@ int main(int argc, char* args[]) {
 	testVectorMath();
 	testCollisions();
 	cout<<"All tests completed!"<<endl;
+
+	cout<<"Starting GUI Stuff"<<endl;
+	GraphicsEngine newEngine;
+
 
 	return 0;
 }
@@ -62,6 +69,7 @@ void testVectorMath() {
 	testDistance();
 	testMagnitude();
 	testNormals();
+	testDotProduct();
 }
 
 //testing Magnitude
@@ -75,6 +83,23 @@ void testMagnitude() {
 	mag = newVec2.getMagnitude();
 	if (fabs(mag - sqrt(2)) >= FLT_EPSILON) { //Difference is greater than error allowable
 		printf("Error in magnitude function! %f vs %f \n", mag, sqrt(2));
+	}
+}
+
+//testing dot product
+void testDotProduct(){
+	Vec2 newvec = { 10, 10 };
+	Vec2 orgin = { 0 , 0 };
+	Vec2 xHat = { 1 , 0 };
+
+	float result = PhysicsEngine::dot(orgin, xHat);
+	if(result != 0){
+		printf("Error in dot product, returned non zero! \n");
+	}
+
+	result = PhysicsEngine::dot(xHat, newvec);
+	if(result != 10){
+		printf("Error in dot product, should have been 10! got %f",result);
 	}
 }
 
