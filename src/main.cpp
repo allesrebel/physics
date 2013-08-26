@@ -10,10 +10,9 @@
 #include <cfloat>
 
 #include "include/datatypes.h"				//primitive data types, and containers
-#include "physicsEngine/PhysicsEngine.h"	//physics engine
+#include "physicsEngine/PhysicsEngine.h"	//physics engine *(just for testing)
 #include "graphicsEngine/GraphicsEngine.h"	//graphics engine (just for testing)
 #include "gameEngine/GameEngine.h"			//game engine
-
 using namespace std;
 
 void testDistance();
@@ -23,19 +22,55 @@ void testCollisions();
 void testDotProduct();
 void testVectorMath();
 
+void testText(GraphicsEngine&);
+void testBG(GraphicsEngine&);
+void testGraphics();
+
 int main(int argc, char* args[]) {
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 
-	cout<<"Performing test functions!"<<endl;
+	cout << "Performing test functions!" << endl;
 	testVectorMath();
 	testCollisions();
-	cout<<"All tests completed!"<<endl;
+	cout << "All tests completed!" << endl;
 
-	cout<<"Starting GUI Stuff"<<endl;
-	GraphicsEngine newEngine;
-
+	cout << "Testing Graphics Stuff" << endl;
+	testGraphics();
 
 	return 0;
+}
+
+//graphics Testing
+void testGraphics() {
+	GraphicsEngine newEngine;
+	testBG(newEngine);
+	testText(newEngine);
+}
+
+void testBG(GraphicsEngine& engine) {
+	engine.refreshScreen(engine.black);
+	SDL_Delay(1000);
+	engine.refreshScreen(engine.white);
+	SDL_Delay(1000);
+	engine.refreshScreen(engine.red);
+	SDL_Delay(1000);
+	engine.refreshScreen(engine.green);
+	SDL_Delay(1000);
+	engine.refreshScreen(engine.blue);
+	SDL_Delay(1000);
+	engine.refreshScreen(engine.black); //to display the blue in memory
+	SDL_Delay(1000);
+}
+
+//testing text rendering and vector conversion
+void testText(GraphicsEngine& engine) {
+	engine.blitText("Hellow World, this is Black", 0, 300, engine.black);
+	engine.blitText("Hellow world, this is white", 0, 280, engine.white);
+	engine.blitText("Hellow Pizza, this is red", 0, 260, engine.red);
+	engine.blitText("Hey there, this be green", 0, 240, engine.green);
+	engine.blitText("That's all world, this is blue", 0, 220, engine.blue);
+	engine.refreshScreen(); //display text
+	SDL_Delay(1000);
 }
 
 //Testing collisions
@@ -87,31 +122,31 @@ void testMagnitude() {
 }
 
 //testing dot product
-void testDotProduct(){
+void testDotProduct() {
 	Vec2 newvec = { 10, 10 };
-	Vec2 orgin = { 0 , 0 };
-	Vec2 xHat = { 1 , 0 };
+	Vec2 orgin = { 0, 0 };
+	Vec2 xHat = { 1, 0 };
 
 	float result = PhysicsEngine::dot(orgin, xHat);
-	if(result != 0){
+	if (result != 0) {
 		printf("Error in dot product, returned non zero! \n");
 	}
 
 	result = PhysicsEngine::dot(xHat, newvec);
-	if(result != 10){
-		printf("Error in dot product, should have been 10! got %f",result);
+	if (result != 10) {
+		printf("Error in dot product, should have been 10! got %f", result);
 	}
 }
 
 //testing normal gen
-void testNormals(){
-	Vec2 newvec = { 1, 0};
-	Vec2 orgin = {0, 0};
-	Vec2 norm = { 0, 1};
-	Vec2 result = PhysicsEngine::getNormal(orgin,newvec);
-	if(result != norm){
+void testNormals() {
+	Vec2 newvec = { 1, 0 };
+	Vec2 orgin = { 0, 0 };
+	Vec2 norm = { 0, 1 };
+	Vec2 result = PhysicsEngine::getNormal(orgin, newvec);
+	if (result != norm) {
 		printf("Error in getNormal function - result incorrect! \n");
-		printf("%f, %f for vec1 %d, %d expected \n",result.x, result.y, 0, 1);
+		printf("%f, %f for vec1 %d, %d expected \n", result.x, result.y, 0, 1);
 	}
 }
 

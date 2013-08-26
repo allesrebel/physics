@@ -8,6 +8,7 @@
 #ifndef DATATYPES_H_
 #define DATATYPES_H_
 
+#include <SDL/SDL.h>
 #include <cmath>
 #include <cfloat>
 
