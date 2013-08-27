@@ -23,6 +23,7 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
+#include <new>
 
 #include "../include/datatypes.h"	//for custom data types
 using namespace std;
@@ -54,13 +55,14 @@ public:
 
 public:
 	//data creation
-	SDL_Surface* createRect(SDL_Rect, Color);
+	SDL_Surface* readImage(string);
 	TTF_Font* loadFont(string, int);
 
 public:
 	//tools and utilities
 	void applyColorKey(SDL_Surface*, Color);
 	SDL_Rect convertToRect(Vec2);
+	SDL_Surface* createSurface(Uint32, int, int, const SDL_Surface*);
 
 public:
 	//defaults and debugging stuffs
@@ -79,18 +81,21 @@ public:
 
 	//debugging functions
 	void blitText(string, int, int, DefaultColors);
-	void blitRect(int, int, DefaultColors);
+	void blitImage(int, int); 	//debugging just drawing images
+	void blitImage2(int, int);	//debugging filling images
+	void blitImage3(int, int);	//debugging modifing images
 	void refreshScreen(DefaultColors color = black);
 
-private:
+public:
 	//bit masks, how the colors are actually represented in memory
 	Uint32 rmask, gmask, bmask, amask;
 	const SDL_VideoInfo* vidInfo; //cached info
+	SDL_Surface* vidScreen;
 public:
 	// window defaults
-	int BPP =  8;
-	int WIDTH =  640;
-	int HEIGHT =  480;
+	int BPP = 8;
+	int WIDTH = 640;
+	int HEIGHT = 480;
 };
 
 #endif /* GRAPHICSENGINE_H_ */

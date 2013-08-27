@@ -28,12 +28,19 @@ GraphicsEngine::GraphicsEngine() {
 	TTF_Init();
 
 	//load defaults
-	SDL_SetVideoMode(WIDTH, HEIGHT, BPP, SDL_HWSURFACE || SDL_DOUBLEBUF);
+	vidScreen = SDL_SetVideoMode(WIDTH, HEIGHT, BPP,
+			SDL_HWSURFACE || SDL_DOUBLEBUF);
+	if (vidScreen == NULL) {
+		printf("Error creating SDL window!\n");
+	}
 
+	vidInfo = SDL_GetVideoInfo(); 	//pre cache
+
+	printf("Setting up stuff\n");
 	setupEndian();
 	setupFonts();
 	setupColors();
-	vidInfo = SDL_GetVideoInfo(); 	//pre cache
+	printf("Finished setup!\n");
 }
 
 GraphicsEngine::~GraphicsEngine() {
@@ -71,19 +78,10 @@ void GraphicsEngine::setupColors() {
 
 // Creates color container with the given colors
 Color GraphicsEngine::getColor(Uint8 r, Uint8 g, Uint8 b) {
-	Uint32 pix = SDL_MapRGB(SDL_GetVideoInfo()->vfmt, r, g, b);
+	Uint32 pix = SDL_MapRGB(vidInfo->vfmt, r, g, b);
 	SDL_Color rgb = { r, g, b };
 	Color newColor = { pix, rgb };
 	return newColor;
-}
-
-//Creates a custom rectangle surface
-SDL_Surface* GraphicsEngine::createRect(SDL_Rect rect, Color color) {
-	SDL_Surface* myRect = SDL_CreateRGBSurface(SDL_HWSURFACE, rect.w, rect.h,
-			vidInfo->vfmt->BitsPerPixel, vidInfo->vfmt->Rmask,
-			vidInfo->vfmt->Gmask, vidInfo->vfmt->Bmask, vidInfo->vfmt->Amask);
-	SDL_FillRect(myRect, NULL, color.pixelColor);
-	return myRect;
 }
 
 //loads a font with a  file path and desired font point size
@@ -108,12 +106,12 @@ void GraphicsEngine::applyColorKey(SDL_Surface* src, Color colorkey) {
  * Only does position, doesn't do SDL_Rect's height or width
  * Relies on accurate Window Height
  */
-SDL_Rect GraphicsEngine::convertToRect(Vec2 src){
+SDL_Rect GraphicsEngine::convertToRect(Vec2 src) {
 	//some rounding errors here (src.y and src.x are floats)
 	int oppositeY = src.y * -1;
 	int maxY = HEIGHT;
 
-	SDL_Rect newRect = {(Sint16)src.x, (Sint16)(maxY+oppositeY), 0 ,0};
+	SDL_Rect newRect = { (Sint16) src.x, (Sint16) (maxY + oppositeY), 0, 0 };
 	return newRect;
 }
 
@@ -138,19 +136,21 @@ void GraphicsEngine::setupEndian() {
  * Draws only to current screen in memory
  * Specify string to print, and location. Color not required.
  */
-void GraphicsEngine::blitText(string text, int x , int y, DefaultColors index = black) {
+void GraphicsEngine::blitText(string text, int x, int y, DefaultColors index =
+		black) {
 	SDL_Surface* textSurf = NULL;
-	textSurf = TTF_RenderText_Blended(getDefaultFont(), text.c_str(), colors[index].RGBColor);
-	if(textSurf == NULL){
-		printf("Error creating text surf: %s! \n",text.c_str());
+	textSurf = TTF_RenderText_Blended(getDefaultFont(), text.c_str(),
+			colors[index].RGBColor);
+	if (textSurf == NULL) {
+		printf("Error creating text surf: %s! \n", text.c_str());
 	}
 
 	//format for display
 	SDL_Surface* finalSurface = SDL_DisplayFormatAlpha(textSurf);
 
-	Vec2 myPos = {(float)x, (float)y};
+	Vec2 myPos = { (float) x, (float) y };
 	SDL_Rect location = convertToRect(myPos);
-	SDL_BlitSurface(textSurf, NULL, SDL_GetVideoSurface(), &location);
+	SDL_BlitSurface(textSurf, NULL, vidScreen, &location);
 
 	//clean up
 	SDL_FreeSurface(textSurf);
@@ -158,10 +158,92 @@ void GraphicsEngine::blitText(string text, int x , int y, DefaultColors index = 
 }
 
 /*
+ * Debugging blit function. reads debug.bmp
+ * Blits a image to the screen at vec2 (bitmap)
+ * simple transform to convert from Vec2 -> Sdl Coords
+ */
+void GraphicsEngine::blitImage(int x, int y) {
+	Vec2 position = { (float) x, (float) y };
+	SDL_Surface* myImage = readImage("debug.bmp");
+	SDL_Rect sdlCoord = convertToRect(position);
+	SDL_BlitSurface(myImage, NULL, vidScreen, &sdlCoord);
+
+	//information pulled from myImage
+	printf("Loaded debug image. %d w by %d h\n", myImage->w, myImage->h);
+
+	SDL_FreeSurface(myImage);
+}
+
+void GraphicsEngine::blitImage2(int x, int y) {
+	Vec2 position = { (float) x, (float) y };
+	SDL_Surface* myImage = readImage("debug.bmp");
+	SDL_Rect sdlCoord = convertToRect(position);
+	SDL_FillRect(myImage, NULL, colors[4].pixelColor);
+
+	SDL_BlitSurface(myImage, NULL, vidScreen, &sdlCoord);
+	SDL_FreeSurface(myImage);
+}
+
+void GraphicsEngine::blitImage3(int x, int y) {
+	Vec2 position = { (float) x, (float) y };
+	SDL_Surface* myImage = readImage("debug.bmp");
+	SDL_Rect sdlCoord = convertToRect(position);
+
+	Uint32* pixels = new Uint32[300 * 300];
+	for (int x = 0; x < 300; x++) {
+		for (int y = 0; y < 300; y++) {
+			pixels[x + y * 300] = colors[3].pixelColor;
+		}
+	}
+
+	SDL_Surface* newSurf = SDL_CreateRGBSurfaceFrom((void*) pixels, 300, 300,
+			vidScreen->format->BitsPerPixel, 300 * sizeof(int),
+			vidScreen->format->Rmask, vidScreen->format->Gmask,
+			vidScreen->format->Bmask, vidScreen->format->Amask);
+	SDL_FillRect(newSurf,NULL,colors[3].pixelColor);
+	SDL_BlitSurface(newSurf, NULL, vidScreen, NULL);
+
+	SDL_FillRect(myImage, NULL, colors[4].pixelColor);
+
+	SDL_BlitSurface(myImage, NULL, vidScreen, &sdlCoord);
+	SDL_FreeSurface(myImage);
+	SDL_FreeSurface(newSurf);
+}
+
+//Creates a custom rectangle surface
+SDL_Surface* GraphicsEngine::readImage(string filename) {
+	SDL_Surface* newSurf = NULL;
+	SDL_Surface* optimizedSurf = NULL;
+
+	newSurf = SDL_LoadBMP(filename.c_str());
+	if (newSurf == NULL) {
+		printf("Error reading image! filename : %s \n", filename.c_str());
+	}
+
+	optimizedSurf = SDL_DisplayFormat(newSurf);
+
+	SDL_FreeSurface(newSurf);
+	return optimizedSurf;
+}
+
+/*
+ * Creates a surface with the format of another surface.
+ * So bliting doesn't require a conversion, and thus doesn't
+ * slow down.
+ */
+SDL_Surface* GraphicsEngine::createSurface(Uint32 flags, int width, int height,
+		const SDL_Surface* display) {
+
+	const SDL_PixelFormat& fmt = *(display->format);
+	return SDL_CreateRGBSurface(flags, width, height, fmt.BitsPerPixel,
+			fmt.Rmask, fmt.Gmask, fmt.Bmask, fmt.Amask);
+}
+
+/*
  * Flip the buffer and produce a clean screen for the next surf in memory
  * You can pick the color of the background, defaults to black
  */
-void GraphicsEngine::refreshScreen(DefaultColors color){
-	SDL_Flip(SDL_GetVideoSurface());
-	SDL_FillRect(SDL_GetVideoSurface(),NULL,colors[color].pixelColor);
+void GraphicsEngine::refreshScreen(DefaultColors color) {
+	SDL_Flip(vidScreen);
+	SDL_FillRect(vidScreen, NULL, colors[color].pixelColor);
 }

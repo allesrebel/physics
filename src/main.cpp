@@ -22,9 +22,12 @@ void testCollisions();
 void testDotProduct();
 void testVectorMath();
 
+void testRects(GraphicsEngine&);
 void testText(GraphicsEngine&);
 void testBG(GraphicsEngine&);
 void testGraphics();
+
+void waitForPress();
 
 int main(int argc, char* args[]) {
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
@@ -40,26 +43,46 @@ int main(int argc, char* args[]) {
 	return 0;
 }
 
+//simple event, wait for key press to continue with test
+void waitForPress() {
+	bool done = false;
+	while (!done) {
+		SDL_Event event;
+		while (SDL_PollEvent(&event)) {
+			if (event.type == SDL_KEYDOWN) {
+				done = true;
+			} else if (event.type == SDL_QUIT) {
+				exit(0);
+			}
+		}
+	}
+}
+
 //graphics Testing
 void testGraphics() {
-	GraphicsEngine newEngine;
-	testBG(newEngine);
-	testText(newEngine);
+	GraphicsEngine engine;
+
+	printf("Starting visual background test;\n");
+	testBG(engine);
+	printf("Starting visual text test; \n");
+	testText(engine);
+	printf("Starting visual rects test; \n");
+	testRects(engine);
 }
 
 void testBG(GraphicsEngine& engine) {
 	engine.refreshScreen(engine.black);
-	SDL_Delay(1000);
+	waitForPress();
 	engine.refreshScreen(engine.white);
-	SDL_Delay(1000);
+	waitForPress();
 	engine.refreshScreen(engine.red);
-	SDL_Delay(1000);
+	waitForPress();
 	engine.refreshScreen(engine.green);
-	SDL_Delay(1000);
+	waitForPress();
 	engine.refreshScreen(engine.blue);
-	SDL_Delay(1000);
+	waitForPress();
 	engine.refreshScreen(engine.black); //to display the blue in memory
-	SDL_Delay(1000);
+	waitForPress();
 }
 
 //testing text rendering and vector conversion
@@ -70,7 +93,16 @@ void testText(GraphicsEngine& engine) {
 	engine.blitText("Hey there, this be green", 0, 240, engine.green);
 	engine.blitText("That's all world, this is blue", 0, 220, engine.blue);
 	engine.refreshScreen(); //display text
-	SDL_Delay(1000);
+	waitForPress();
+}
+
+//testing rect gen //actually testing images
+void testRects(GraphicsEngine& engine) {
+	engine.blitImage(50, 100);
+	engine.blitImage(250, 100);
+	engine.blitImage2(50,200);
+	engine.refreshScreen();
+	waitForPress();
 }
 
 //Testing collisions
