@@ -24,11 +24,11 @@ bool PhysicsEngine::checkCollisionAABB(AABB a, AABB b) {
 	//two objects, then they are not touching
 
 	//check if there's a line in the y direction (a gap in the x's)
-	if (a.rightCorner.x < b.leftCorner.x || a.leftCorner.x > b.rightCorner.x)
+	if (a.bRightCorner.x < b.tLeftCorner.x || a.tLeftCorner.x > b.bRightCorner.x)
 		return false;
 
 	//check if there's a line in the x direction (a gap in in the y's)
-	if (a.rightCorner.y < b.leftCorner.y || a.leftCorner.y > b.rightCorner.y)
+	if (a.bRightCorner.y < b.tLeftCorner.y || a.tLeftCorner.y > b.bRightCorner.y)
 		return false;
 
 	//if there is no seperating axis, then they must have collided

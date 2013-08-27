@@ -98,7 +98,7 @@ void testText(GraphicsEngine& engine) {
 
 //testing rect gen //actually testing images
 void testRects(GraphicsEngine& engine) {
-	engine.blitImage(50, 100);
+	engine.blitImage(0, 100);
 	engine.blitImage(250, 100);
 	engine.blitImage2(50,200);
 	engine.refreshScreen();

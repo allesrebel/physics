@@ -31,3 +31,7 @@ bool Vec2::operator !=(const Vec2& rhs) {
 		return true;
 	return false;
 }
+
+void GraphicsObject::draw(){
+	SDL_BlitSurface(sprite,frame,SDL_GetVideoSurface(),location);
+}

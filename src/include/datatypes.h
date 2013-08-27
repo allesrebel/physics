@@ -11,6 +11,9 @@
 #include <SDL/SDL.h>
 #include <cmath>
 #include <cfloat>
+#include <string>
+
+using namespace std;
 
 /*
  * simple 2d position vector
@@ -26,12 +29,49 @@ struct Vec2{
 
 /*
  * 	Axis Aligned Bounding Boxes - basically a box
- *	that we will be checking for collisions in. Can't
- *	rotate or do anything special (probably will be removed)
+ *	that we will be checking for collisions in.
  */
 struct AABB{
-	Vec2 leftCorner; 	//top left
-	Vec2 rightCorner;	//bottom right
+	Vec2 tLeftCorner; 	//top left
+	Vec2 tRightCorner;	//top right
+	Vec2 bLeftCorner;	//bottom left
+	Vec2 bRightCorner;	//bottom right
+};
+
+/*
+ * Class to represent all assests loaded
+ * from images. Text isn't counted here
+ * TODO: Load from a file
+ * TODO: Possibly a priority system to limit overlap
+ */
+class GraphicsObject{
+public:
+	GraphicsObject(string);
+	~GraphicsObject();
+	void draw();
+public:
+	SDL_Surface* sprite;	//total sheet
+	SDL_Rect* frame;		//clip rect
+	SDL_Rect* location;		//location to blit to
+};
+
+/*
+ * Figure class - basically combines
+ * data needed for physics and graphics engines
+ * TODO: More stuff here someday
+ */
+class Figure{
+public:
+	Figure();
+
+	AABB generateAABB();
+	SDL_Rect* getFrame();
+public:
+	SDL_Rect* frame;
+
+public:
+	Vec2 velocity;
+	Vec2 force;
 };
 
 /*
