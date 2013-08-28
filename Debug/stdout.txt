@@ -1,0 +1,12 @@
+!!!Hello World!!!
+Performing test functions!
+Tested false, when there should have been a collision, error!
+All tests completed!
+Testing Graphics Stuff
+Setting up stuff
+Finished setup!
+Starting visual background test;
+Starting visual text test; 
+Starting visual rects test; 
+Loaded debug image. 200 w by 100 h
+Loaded debug image. 200 w by 100 h
