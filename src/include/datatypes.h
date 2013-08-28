@@ -49,10 +49,16 @@ public:
 	GraphicsObject(string);
 	~GraphicsObject();
 	void draw();
+
+	void setFrame(int);
 public:
 	SDL_Surface* sprite;	//total sheet
-	SDL_Rect* frame;		//clip rect
+	SDL_Rect* frameClip;		//clip rect
 	SDL_Rect* location;		//location to blit to
+public: //cliping information
+	int currentFrame;
+	int frameWidth;	//properties of a single clip
+	int frameHeight;	//properties of a single clip
 };
 
 /*
@@ -60,14 +66,14 @@ public:
  * data needed for physics and graphics engines
  * TODO: More stuff here someday
  */
-class Figure{
+class Figure:public GraphicsObject{
 public:
-	Figure();
+	Figure(string fileName);
 
 	AABB generateAABB();
 	SDL_Rect* getFrame();
 public:
-	SDL_Rect* frame;
+	//local data
 
 public:
 	Vec2 velocity;

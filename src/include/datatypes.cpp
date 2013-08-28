@@ -32,6 +32,32 @@ bool Vec2::operator !=(const Vec2& rhs) {
 	return false;
 }
 
-void GraphicsObject::draw(){
-	SDL_BlitSurface(sprite,frame,SDL_GetVideoSurface(),location);
+
+/*
+ * Constuctor - loads the image into the surface
+ */
+GraphicsObject::GraphicsObject(string fileName){
+	frameHeight = 0;
+	frameWidth = 0;
+	currentFrame = 0;
+	sprite = NULL;
+	frameClip = NULL;
+	location = NULL;
 }
+
+/*
+ * Basic Draw Function for the object - doesn't do much other than that
+ */
+void GraphicsObject::draw(){
+	SDL_BlitSurface(sprite,frameClip,SDL_GetVideoSurface(),location);
+}
+
+void GraphicsObject::setFrame(int number){
+
+}
+
+Figure::Figure(string fileName):GraphicsObject(fileName){
+
+}
+
+
