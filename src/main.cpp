@@ -81,7 +81,7 @@ void testGraphics() {
 void testGraphicObjects(GraphicsEngine& engine) {
 	vector<GraphicsObject> objects; //container for objects to render
 
-	SDL_Surface* mySheetTest = SDL_LoadBMP("../res/mysheet.bmp");
+	SDL_Surface* mySheetTest = SDL_LoadBMP("res/mysheet.bmp");
 	SDL_Rect myLoc = { 100, 100, 0, 0 };
 	GraphicsObject* newObject;
 	newObject = new GraphicsObject(mySheetTest, 100, 100, 0, myLoc);

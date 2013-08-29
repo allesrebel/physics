@@ -164,7 +164,7 @@ void GraphicsEngine::blitText(string text, int x, int y, DefaultColors index =
  */
 void GraphicsEngine::blitImage(int x, int y) {
 	Vec2 position = { (float) x, (float) y };
-	SDL_Surface* myImage = readImage("../res/debug.bmp");
+	SDL_Surface* myImage = readImage("res/debug.bmp");
 	SDL_Rect sdlCoord = convertToRect(position);
 	SDL_BlitSurface(myImage, NULL, vidScreen, &sdlCoord);
 
@@ -176,7 +176,7 @@ void GraphicsEngine::blitImage(int x, int y) {
 
 void GraphicsEngine::blitImage2(int x, int y) {
 	Vec2 position = { (float) x, (float) y };
-	SDL_Surface* myImage = readImage("../res/debug.bmp");
+	SDL_Surface* myImage = readImage("res/debug.bmp");
 	SDL_Rect sdlCoord = convertToRect(position);
 	SDL_FillRect(myImage, NULL, colors[4].pixelColor);
 
@@ -186,7 +186,7 @@ void GraphicsEngine::blitImage2(int x, int y) {
 
 void GraphicsEngine::blitImage3(int x, int y) {
 	Vec2 position = { (float) x, (float) y };
-	SDL_Surface* myImage = readImage("../res/debug.bmp");
+	SDL_Surface* myImage = readImage("res/debug.bmp");
 	SDL_Rect sdlCoord = convertToRect(position);
 
 	Uint32* pixels = new Uint32[300 * 300];
