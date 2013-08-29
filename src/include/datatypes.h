@@ -46,10 +46,10 @@ struct AABB{
  */
 class GraphicsObject{
 public:
-	GraphicsObject(string);
-	~GraphicsObject();
+	GraphicsObject(SDL_Surface*,int,int,int,SDL_Rect);
+	//~GraphicsObject();
 	void draw();
-
+	void setPosition(SDL_Rect);
 	void setFrame(int);
 public:
 	SDL_Surface* sprite;	//total sheet
@@ -59,6 +59,7 @@ public: //cliping information
 	int currentFrame;
 	int frameWidth;	//properties of a single clip
 	int frameHeight;	//properties of a single clip
+	bool sheet;
 };
 
 /*
@@ -68,7 +69,7 @@ public: //cliping information
  */
 class Figure:public GraphicsObject{
 public:
-	Figure(string fileName);
+	Figure(SDL_Surface*, int, int , int , SDL_Rect);
 
 	AABB generateAABB();
 	SDL_Rect* getFrame();

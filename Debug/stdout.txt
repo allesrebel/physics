@@ -10,3 +10,4 @@ Starting visual text test;
 Starting visual rects test; 
 Loaded debug image. 200 w by 100 h
 Loaded debug image. 200 w by 100 h
+Testing the graphics objects 

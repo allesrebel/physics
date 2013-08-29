@@ -34,30 +34,86 @@ bool Vec2::operator !=(const Vec2& rhs) {
 
 
 /*
- * Constuctor - loads the image into the surface
+ * Constructor - loads the image into the surface
+ * TODO: Make sequences - eg one for walking, one for jumping, etc
+ * TODO: Code the sequences so that auto pick the right frame on draw
+ * Probably did this function totally wrong :(
  */
-GraphicsObject::GraphicsObject(string fileName){
-	frameHeight = 0;
-	frameWidth = 0;
-	currentFrame = 0;
-	sprite = NULL;
-	frameClip = NULL;
-	location = NULL;
+GraphicsObject::GraphicsObject(SDL_Surface* sprite, int frameH, int frameW, int frameInit, SDL_Rect loc){
+	frameHeight = frameH;
+	frameWidth = frameW;
+	currentFrame = frameInit;
+	this->sprite = sprite;
+
+	location = new SDL_Rect;
+	*location = loc;
+
+	//check if sprite is spirte sheet
+	if(sprite->w == frameW && sprite->h == frameH){
+		sheet = false;
+	}
+
+	if(sheet){
+		//so the surface is a sprite sheet, get init frame
+		frameClip = new SDL_Rect;
+		//TODO: support more than one strip in function
+		setFrame(frameInit);
+		currentFrame = frameInit;
+	}
+	else{
+		frameClip = NULL;
+	}
 }
 
 /*
  * Basic Draw Function for the object - doesn't do much other than that
+ * Figures out what the next frame should be
+ * We should put the Frames in a queue though. ( and time based )
  */
 void GraphicsObject::draw(){
 	SDL_BlitSurface(sprite,frameClip,SDL_GetVideoSurface(),location);
+	if(sheet){
+		//TODO: make a sort of map queue as a private array
+		currentFrame++;
+		if(currentFrame*frameWidth > sprite->w){
+			currentFrame = 0;
+		}
+
+		//apply new clipping rect
+		setFrame(currentFrame);
+	}
 }
 
 void GraphicsObject::setFrame(int number){
+	int x = frameWidth*number;
+	int y = 0;	//TODO: make the clip 2 layers maybe? For better organization of sheets
+
+	int w = frameWidth;
+	int h = frameHeight;
+
+	frameClip = new SDL_Rect;
+
+	frameClip->x = x;
+	frameClip->y = y;
+	frameClip->h = h;
+	frameClip->w = w;
+}
+
+/*
+ * Sets an object's position in SDL_Coords
+ * Make sure Vecs have been converted to SDL_ Rects
+ */
+void GraphicsObject::setPosition(SDL_Rect newPosition){
+	*location = newPosition;
+}
+
+/*
+ * Figure constuctor. currently doesn't do anything
+ * Uses the C++ equalivant of super
+ */
+Figure::Figure(SDL_Surface* sprite, int frameH, int frameW, int frameInit, SDL_Rect loc):GraphicsObject(sprite,frameH, frameW,frameInit,loc){
 
 }
 
-Figure::Figure(string fileName):GraphicsObject(fileName){
-
-}
 
 

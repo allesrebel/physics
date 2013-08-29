@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <cfloat>
+#include <vector>
 
 #include "include/datatypes.h"				//primitive data types, and containers
 #include "physicsEngine/PhysicsEngine.h"	//physics engine *(just for testing)
@@ -22,6 +23,7 @@ void testCollisions();
 void testDotProduct();
 void testVectorMath();
 
+void testGraphicObjects(GraphicsEngine&);
 void testRects(GraphicsEngine&);
 void testText(GraphicsEngine&);
 void testBG(GraphicsEngine&);
@@ -68,6 +70,37 @@ void testGraphics() {
 	testText(engine);
 	printf("Starting visual rects test; \n");
 	testRects(engine);
+	printf("Testing the graphics objects \n");
+	testGraphicObjects(engine);
+}
+
+/*
+ * Testing the graphics object class to see if animations work
+ * like they are suppose to
+ */
+void testGraphicObjects(GraphicsEngine& engine) {
+	vector<GraphicsObject> objects; //container for objects to render
+
+	SDL_Surface* mySheetTest = SDL_LoadBMP("mysheet.bmp");
+	SDL_Rect myLoc = { 100, 100, 0, 0 };
+	GraphicsObject* newObject;
+	newObject = new GraphicsObject(mySheetTest, 100, 100, 0, myLoc);
+
+	bool done = false;
+	while (!done) {
+		newObject->draw();
+		engine.refreshScreen();
+
+		SDL_Event event;
+		while(SDL_PollEvent(&event)){
+			if(event.type == SDL_KEYDOWN){
+				done = true;
+			}
+			else if(event.type == SDL_QUIT){
+				done = true;
+			}
+		}
+	}
 }
 
 void testBG(GraphicsEngine& engine) {
@@ -100,7 +133,7 @@ void testText(GraphicsEngine& engine) {
 void testRects(GraphicsEngine& engine) {
 	engine.blitImage(0, 100);
 	engine.blitImage(250, 100);
-	engine.blitImage2(50,200);
+	engine.blitImage2(50, 200);
 	engine.refreshScreen();
 	waitForPress();
 }
