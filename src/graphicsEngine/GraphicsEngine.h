@@ -62,6 +62,7 @@ public:
 	//tools and utilities
 	void applyColorKey(SDL_Surface*, Color);
 	SDL_Rect convertToRect(Vec2);
+	Vec2 convertToVec2(SDL_Rect);
 	SDL_Surface* createSurface(Uint32, int, int, const SDL_Surface*);
 
 public:

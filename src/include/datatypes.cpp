@@ -84,6 +84,10 @@ void GraphicsObject::draw(){
 	}
 }
 
+/*
+ * Set current clip rect based on frame number given
+ * @param int Number of desired display frame
+ */
 void GraphicsObject::setFrame(int number){
 	int x = frameWidth*number;
 	int y = 0;	//TODO: make the clip 2 layers maybe? For better organization of sheets
@@ -100,6 +104,25 @@ void GraphicsObject::setFrame(int number){
 }
 
 /*
+ * Returns the locations of the object, in SDL coords
+ * Conversion required if being used for vec2 positions
+ */
+SDL_Rect GraphicsObject::getPosition() {
+	//returns a copy of the current location
+	SDL_Rect copy = *location;
+	return copy;
+}
+
+/*
+ * Create an AABB based on object properties
+ * Modify the init AABB based on current position
+ */
+AABB* GraphicsObject::getAABB() {
+
+}
+
+
+/*
  * Sets an object's position in SDL_Coords
  * Make sure Vecs have been converted to SDL_ Rects
  */
@@ -113,7 +136,10 @@ void GraphicsObject::setPosition(SDL_Rect newPosition){
  */
 Figure::Figure(SDL_Surface* sprite, int frameH, int frameW, int frameInit, SDL_Rect loc):GraphicsObject(sprite,frameH, frameW,frameInit,loc){
 
+	
 }
 
+AABB Figure::generateAABBs() {
 
 
+}

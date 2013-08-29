@@ -58,7 +58,7 @@ TTF_Font* GraphicsEngine::getDefaultFont() {
  */
 void GraphicsEngine::setupFonts() {
 	//load default font
-	fonts.push_back(TTF_OpenFont("bluehigh.ttf", 20));
+	fonts.push_back(TTF_OpenFont("res/bluehigh.ttf", 20));
 	if (fonts.at(0) == NULL) {
 		printf("Error opening font! %s", TTF_GetError());
 	}
@@ -98,6 +98,21 @@ TTF_Font* GraphicsEngine::loadFont(string filename, int ptsize) {
  */
 void GraphicsEngine::applyColorKey(SDL_Surface* src, Color colorkey) {
 	SDL_SetColorKey(src, SDL_SRCCOLORKEY, colorkey.pixelColor);
+}
+
+/*
+ * Quick transform to convert SDL coordinates to
+ * Vec2 coordinates (Cartesian coords)
+ */
+Vec2 GraphicsEngine::convertToVec2(SDL_Rect rect) {
+	int oppositeY = rect.y - HEIGHT;
+	//now to get the real y
+	int realY = oppositeY * -1;
+
+	//possible loss of accuracy - converting from
+	//floats to ints
+	Vec2 newVec = { (float)rect.x , (float)realY };
+	return newVec;
 }
 
 /*
@@ -247,3 +262,5 @@ void GraphicsEngine::refreshScreen(DefaultColors color) {
 	SDL_Flip(vidScreen);
 	SDL_FillRect(vidScreen, NULL, colors[color].pixelColor);
 }
+
+
