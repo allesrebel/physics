@@ -36,6 +36,7 @@ struct AABB{
 	Vec2 tRightCorner;	//top right
 	Vec2 bLeftCorner;	//bottom left
 	Vec2 bRightCorner;	//bottom right
+	Vec2 Position;		//middle of the AABB
 };
 
 /*
@@ -72,7 +73,6 @@ public:
 	Figure(SDL_Surface*, int, int , int , SDL_Rect);
 
 	AABB generateAABB();
-	SDL_Rect* getFrame();
 public:
 	//local data
 
