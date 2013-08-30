@@ -34,12 +34,13 @@ bool Vec2::operator !=(const Vec2& rhs) {
 
 
 /*
- * Constructor - loads the image into the surface
+ * Constructor - loads the image into the surface and creates
+ * deep copies of all data given. (it will allocate all memory needed)
  * TODO: Make sequences - eg one for walking, one for jumping, etc
  * TODO: Code the sequences so that auto pick the right frame on draw
  * Probably did this function totally wrong :(
  */
-GraphicsObject::GraphicsObject(SDL_Surface* sprite, int frameH, int frameW, int frameInit, SDL_Rect loc){
+GraphicsObject::GraphicsObject(SDL_Surface* sprite, int frameH, int frameW, int frameInit, SDL_Rect loc, PhysicsObject* pO = NULL){
 	frameHeight = frameH;
 	frameWidth = frameW;
 	currentFrame = frameInit;
@@ -114,11 +115,42 @@ SDL_Rect GraphicsObject::getPosition() {
 }
 
 /*
+ * Deconstructor for the class
+ * destories allocated memory for this object
+ */
+GraphicsObject::~GraphicsObject() {
+	delete location;
+	objectProps->clear();
+	delete objectProps;
+	delete frameClip;
+	SDL_FreeSurface(sprite);
+}
+
+/*
  * Create an AABB based on object properties
  * Modify the init AABB based on current position
+ * and current frame being rendered
  */
 AABB* GraphicsObject::getAABB() {
+	//check if there are any physics associated with this object
+	if(objectProps == NULL){
+		return NULL;
+	}
 
+	//object has physical properties, but no AABB. Not effected by collisions
+	if(objectProps->initAABBs.empty()){
+		return NULL;
+	}
+
+	//return the AABB associated with this frame
+	//Note, could still be NULL
+	try{
+		return objectProps->initAABBs.at(currentFrame);
+	}
+	catch(exception& e){
+		//is definitely a out of bounds exception
+		return NULL;
+	}
 }
 
 
@@ -134,7 +166,7 @@ void GraphicsObject::setPosition(SDL_Rect newPosition){
  * Figure constuctor. currently doesn't do anything
  * Uses the C++ equalivant of super
  */
-Figure::Figure(SDL_Surface* sprite, int frameH, int frameW, int frameInit, SDL_Rect loc):GraphicsObject(sprite,frameH, frameW,frameInit,loc){
+Figure::Figure(SDL_Surface* sprite, int frameH, int frameW, int frameInit, SDL_Rect loc){
 
 	
 }
@@ -142,4 +174,15 @@ Figure::Figure(SDL_Surface* sprite, int frameH, int frameW, int frameInit, SDL_R
 AABB Figure::generateAABBs() {
 
 
+}
+
+/*
+ * Method to clear information AABB information stored in the
+ * Struct.
+ */
+void PhysicsObject::clear() {
+	for(int i = 0; i < (int)initAABBs.size(); i++){
+		delete initAABBs[i];
+	}
+	initAABBs.clear();
 }

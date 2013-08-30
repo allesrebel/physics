@@ -12,6 +12,7 @@
 #include <cmath>
 #include <cfloat>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -41,41 +42,10 @@ struct AABB {
 };
 
 /*
- * Class to represent all assests loaded
- * from images. Text isn't counted here
- * The figure will probably be composed of
- * a ton of these
- * Each will be specifying it's own hit box (AABB)
- * only if physics applys to the object
- * TODO: Load from a file
- * TODO: Possibly a priority system to limit overlap
- */
-class GraphicsObject {
-	public:
-	GraphicsObject(SDL_Surface*, int, int, int, SDL_Rect);
-	//~GraphicsObject();
-	void draw();
-	void setPosition(SDL_Rect);
-	SDL_Rect getPosition();
-	void setFrame(int);
-
-	AABB* getAABB();
-	public:
-	SDL_Surface* sprite;	//total sheet
-	SDL_Rect* frameClip;		//clip rect
-	SDL_Rect* location;		//location to blit to
-	public:
-	//cliping information
-	int currentFrame;
-	int frameWidth;	//properties of a single clip
-	int frameHeight;	//properties of a single clip
-	bool sheet;
-};
-
-/*
  * Physics object
  * These will be containers for the the physics
  * properties of an object
+ * To be used in the physics engine
  *
  */
 struct PhysicsObject {
@@ -87,6 +57,46 @@ struct PhysicsObject {
 
 	Vec2 velocity;
 	float angle;
+
+	vector<AABB*> initAABBs;	//AABBs for given states. Access with frame num
+	void clear();
+};
+
+/*
+ * Class to represent all assests loaded
+ * from images. Text isn't counted here
+ * The figure will probably be composed of
+ * a ton of these
+ * Each will be specifying it's own hit box (AABB)
+ * only if physics applys to the object
+ * TODO: Load from a file
+ * TODO: Possibly a priority system to limit overlap
+ */
+class GraphicsObject {
+	public:
+	GraphicsObject(SDL_Surface*, int, int, int, SDL_Rect, PhysicsObject*);
+	~GraphicsObject();
+	void draw();
+	void setPosition(SDL_Rect);
+	SDL_Rect getPosition();
+	void setFrame(int);
+
+	AABB* getAABB();
+
+	//pointer to where physics for this object is, if it has physic properties
+	PhysicsObject* objectProps;
+
+	public:
+	SDL_Surface* sprite;	//total sheet
+	SDL_Rect* frameClip;		//clip rect
+	SDL_Rect* location;		//location to blit to
+
+	public:
+	//cliping information
+	int currentFrame;
+	int frameWidth;	//properties of a single clip
+	int frameHeight;	//properties of a single clip
+	bool sheet;
 };
 
 /*
@@ -94,17 +104,17 @@ struct PhysicsObject {
  * data needed for physics and graphics engines
  * TODO: More stuff here someday
  */
-class Figure: public GraphicsObject {
+class Figure{
 	public:
 	Figure(SDL_Surface*, int, int, int, SDL_Rect);
 
 	AABB generateAABBs();
 	public:
 	//local data
+	vector<GraphicsObject*> gObjects; //graphic objects contained in this figure
 
 	public:
-	Vec2 velocity;
-	Vec2 force;
+	PhysicsObject physicalProp;
 };
 
 /*
