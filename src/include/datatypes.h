@@ -49,6 +49,7 @@ struct AABB {
  *
  */
 struct PhysicsObject {
+	PhysicsObject(float m = 0, float res = 0, float dens = 0, Vec2 vel = {0,0}, float angle = 0);
 	float mass;
 	float invMass;
 
@@ -108,7 +109,8 @@ class Figure{
 	public:
 	Figure(SDL_Surface*, int, int, int, SDL_Rect);
 
-	AABB generateAABBs();
+	vector<AABB*> generateAABBs();
+	GraphicsObject* getGraphicsObject(AABB*);
 	public:
 	//local data
 	vector<GraphicsObject*> gObjects; //graphic objects contained in this figure

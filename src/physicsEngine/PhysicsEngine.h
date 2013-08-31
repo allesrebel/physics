@@ -17,6 +17,9 @@ public:
 	PhysicsEngine();
 	virtual ~PhysicsEngine();
 
+	//core functionality
+	static void applyVelocity(Vec2*, Vec2, float, float);
+
 	//experimentation
 	static bool checkCollisionAABB(AABB, AABB);
 	static bool checkCollisionCircle(Circle, Circle);

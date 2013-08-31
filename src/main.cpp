@@ -29,6 +29,9 @@ void testText(GraphicsEngine&);
 void testBG(GraphicsEngine&);
 void testGraphics();
 
+void testPhysics();
+void testAABBwithGraphics(GraphicsEngine& gEngine, PhysicsEngine& pEngine);
+
 void waitForPress();
 
 int main(int argc, char* args[]) {
@@ -53,7 +56,8 @@ void waitForPress() {
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_KEYDOWN) {
 				done = true;
-			} else if (event.type == SDL_QUIT) {
+			}
+			else if (event.type == SDL_QUIT) {
 				exit(0);
 			}
 		}
@@ -92,11 +96,11 @@ void testGraphicObjects(GraphicsEngine& engine) {
 		engine.refreshScreen();
 
 		SDL_Event event;
-		while(SDL_PollEvent(&event)){
-			if(event.type == SDL_KEYDOWN){
+		while (SDL_PollEvent(&event)) {
+			if (event.type == SDL_KEYDOWN) {
 				done = true;
 			}
-			else if(event.type == SDL_QUIT){
+			else if (event.type == SDL_QUIT) {
 				done = true;
 			}
 		}
@@ -159,8 +163,7 @@ void testCollisions() {
 	anotherShape = {newVec, another};
 
 	if (!PhysicsEngine::checkCollisionAABB(anotherShape, newShape)) {
-		cout << "Tested false, when there should have been a collision, error!"
-				<< endl;
+		cout << "Tested false, when there should have been a collision, error!" << endl;
 	}
 }
 
@@ -222,7 +225,21 @@ void testDistance() {
 	float distComputed = 0;
 	distComputed = PhysicsEngine::distance(newVec, another);
 	if (fabs(distComputed - sqrt(2)) >= FLT_EPSILON) { //Difference is greater than error allowable
-		printf("Error in distance function! %f vs %f \n", distComputed,
-				sqrt(2));
+		printf("Error in distance function! %f vs %f \n", distComputed, sqrt(2));
 	}
+}
+
+//testing the AABB system with physics engine
+void testAABBwithGraphics(GraphicsEngine& gEngine, PhysicsEngine& pEngine) {
+	Vec2 position = { 100, 100 };
+	Vec2 velo = { 0, 0 };
+	PhysicsObject* pO = new PhysicsObject(10, .3, 10, Vec2, 0);
+}
+
+//testing physics engine when coupled with graphic OBjects
+void testPhysics() {
+	GraphicsEngine newGE;
+	PhysicsEngine newPE;
+	printf("Beginning physics test with both engines! \n");
+	testAABBwithGraphics(newGE, newPE);
 }

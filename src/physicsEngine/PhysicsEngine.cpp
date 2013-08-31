@@ -82,3 +82,19 @@ float PhysicsEngine::dot(Vec2 a, Vec2 b){
 float PhysicsEngine::distance(Vec2 a, Vec2 b) {
 	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
 }
+
+/*
+ * Apply the velocity vector to the position vector
+ * possible loss of precision with floats
+ * Requires a time step to work right
+ * Doesn't do much else though
+ *
+ * Note it directly modifies the position vector
+ */
+void PhysicsEngine::applyVelocity(Vec2* positionVector, Vec2 velocity, float angle, float timeStep) {
+	//first we'll break up the velocty into componets using angle
+
+	//apply velocity to their respective componets in he position vector
+
+
+}
