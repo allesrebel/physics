@@ -18,7 +18,8 @@ public:
 	virtual ~PhysicsEngine();
 
 	//core functionality
-	static void applyVelocity(Vec2*, Vec2, float, float);
+	static void applyVelocity(Vec2*, Vec2, float);
+	static void applyAccel(Vec2*, Vec2, float);
 
 	//experimentation
 	static bool checkCollisionAABB(AABB, AABB);
@@ -28,9 +29,9 @@ public:
 
 
 	//math helper functions
-	static float getMagnitude(Vec2);
 	static float dot(Vec2, Vec2);
 	static Vec2 makeUnitVector(Vec2);
+	static Vec2 addVectors(Vec2, Vec2);
 	static Vec2 getNormal(Vec2, Vec2);
 	static float distance(Vec2, Vec2);
 };

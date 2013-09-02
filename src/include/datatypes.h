@@ -23,6 +23,8 @@ struct Vec2 {
 	float x;
 	float y;
 	//bool operator=(const Vec2&); auto gen by compiler with 5 other func
+	Vec2 operator+(const Vec2&);
+	Vec2 operator* (float);
 	bool operator==(const Vec2&);
 	bool operator!=(const Vec2&);
 	float getMagnitude();
@@ -49,7 +51,7 @@ struct AABB {
  *
  */
 struct PhysicsObject {
-	PhysicsObject(float m = 0, float res = 0, float dens = 0, Vec2 vel = {0,0}, float angle = 0);
+	PhysicsObject(float m = 0, float res = 0, float dens = 0, Vec2 vel = {0,0});
 	float mass;
 	float invMass;
 
@@ -57,7 +59,6 @@ struct PhysicsObject {
 	float density;
 
 	Vec2 velocity;
-	float angle;
 
 	vector<AABB*> initAABBs;	//AABBs for given states. Access with frame num
 	void clear();

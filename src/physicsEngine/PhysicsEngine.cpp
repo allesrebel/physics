@@ -18,6 +18,7 @@ PhysicsEngine::~PhysicsEngine() {
 
 /*
  * Checks if two AABB objects have collided
+ * TODO: Change to more robust system
  */
 bool PhysicsEngine::checkCollisionAABB(AABB a, AABB b) {
 	//Applying the SAT theorem, if there is a axis between
@@ -77,6 +78,30 @@ float PhysicsEngine::dot(Vec2 a, Vec2 b){
 }
 
 /*
+ * Adds two vectors together
+ */
+Vec2 PhysicsEngine::addVectors(Vec2 vec1, Vec2 vec2) {
+	Vec2 result = {vec1.x + vec2.x, vec1.y+vec2.y};
+	return result;
+}
+
+/*
+ * Similar to apply Velocity function.
+ * It simply takes the object's Velocity vector and modifies it
+ * with an acceleration vector with a given Time Constant
+ *
+ * @param Vec2* velocity that will be modified
+ * @param Vec2	acceleration to be applied
+ * @param float	timestep to apply acceleration over
+ */
+void PhysicsEngine::applyAccel(Vec2* velocity, Vec2 accel, float timeStep) {
+	//compute the change in velocity over the given timestep
+	Vec2 veloMod = accel*timeStep;
+	//add this to the velocity
+	*velocity = *velocity + veloMod;
+}
+
+/*
  * Simple distance calcuation using 2D vectors
  */
 float PhysicsEngine::distance(Vec2 a, Vec2 b) {
@@ -90,11 +115,13 @@ float PhysicsEngine::distance(Vec2 a, Vec2 b) {
  * Doesn't do much else though
  *
  * Note it directly modifies the position vector
+ * @param Vec2* position vector that will be modified
+ * @param Vec2	velocity that will be applied to position vector
+ * @param float	timestep, interval of time that this applys to
  */
-void PhysicsEngine::applyVelocity(Vec2* positionVector, Vec2 velocity, float angle, float timeStep) {
-	//first we'll break up the velocty into componets using angle
-
-	//apply velocity to their respective componets in he position vector
-
-
+void PhysicsEngine::applyVelocity(Vec2* positionVector, Vec2 velocity, float timeStep) {
+	//first we'll just look at the components of the velocity vector and apply time
+	Vec2 positionMod = velocity*timeStep;
+	//then add this result to the position vector
+	*positionVector = *positionVector+positionMod;
 }

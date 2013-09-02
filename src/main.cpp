@@ -22,6 +22,7 @@ void testMagnitude();
 void testCollisions();
 void testDotProduct();
 void testVectorMath();
+void testScalarMult();
 
 void testGraphicObjects(GraphicsEngine&);
 void testRects(GraphicsEngine&);
@@ -45,6 +46,9 @@ int main(int argc, char* args[]) {
 	cout << "Testing Graphics Stuff" << endl;
 	testGraphics();
 
+	cout << "Testing physics and graphics Stuff" << endl;
+	testPhysics();
+
 	return 0;
 }
 
@@ -64,6 +68,17 @@ void waitForPress() {
 	}
 }
 
+void testScalarMult() {
+	Vec2 vec1 = { 1, 1 };
+	Vec2 vec2 = { 2, 2 };
+	float scalar = 2;
+	vec1 * scalar;
+
+	if (vec1 != vec2) {
+		printf("Error doing scalar mult!\n");
+	}
+}
+
 //graphics Testing
 void testGraphics() {
 	GraphicsEngine engine;
@@ -76,6 +91,8 @@ void testGraphics() {
 	testRects(engine);
 	printf("Testing the graphics objects \n");
 	testGraphicObjects(engine);
+
+	return;
 }
 
 /*
@@ -90,36 +107,17 @@ void testGraphicObjects(GraphicsEngine& engine) {
 	GraphicsObject* newObject;
 	newObject = new GraphicsObject(mySheetTest, 100, 100, 0, myLoc, NULL);
 
-	bool done = false;
-	while (!done) {
-		newObject->draw();
-		engine.refreshScreen();
-
-		SDL_Event event;
-		while (SDL_PollEvent(&event)) {
-			if (event.type == SDL_KEYDOWN) {
-				done = true;
-			}
-			else if (event.type == SDL_QUIT) {
-				done = true;
-			}
-		}
-	}
+	newObject->draw();
+	engine.refreshScreen();
 }
 
 void testBG(GraphicsEngine& engine) {
 	engine.refreshScreen(engine.black);
-	waitForPress();
 	engine.refreshScreen(engine.white);
-	waitForPress();
 	engine.refreshScreen(engine.red);
-	waitForPress();
 	engine.refreshScreen(engine.green);
-	waitForPress();
 	engine.refreshScreen(engine.blue);
-	waitForPress();
 	engine.refreshScreen(engine.black); //to display the blue in memory
-	waitForPress();
 }
 
 //testing text rendering and vector conversion
@@ -130,7 +128,6 @@ void testText(GraphicsEngine& engine) {
 	engine.blitText("Hey there, this be green", 0, 240, engine.green);
 	engine.blitText("That's all world, this is blue", 0, 220, engine.blue);
 	engine.refreshScreen(); //display text
-	waitForPress();
 }
 
 //testing rect gen //actually testing images
@@ -139,7 +136,6 @@ void testRects(GraphicsEngine& engine) {
 	engine.blitImage(250, 100);
 	engine.blitImage2(50, 200);
 	engine.refreshScreen();
-	waitForPress();
 }
 
 //Testing collisions
@@ -173,6 +169,7 @@ void testVectorMath() {
 	testMagnitude();
 	testNormals();
 	testDotProduct();
+	testScalarMult();
 }
 
 //testing Magnitude
@@ -230,10 +227,21 @@ void testDistance() {
 }
 
 //testing the AABB system with physics engine
+//Note - graphics not added yet
 void testAABBwithGraphics(GraphicsEngine& gEngine, PhysicsEngine& pEngine) {
 	Vec2 position = { 100, 100 };
-	Vec2 velo = { 0, 0 };
-	PhysicsObject* pO = new PhysicsObject(10, .3, 10, Vec2, 0);
+	Vec2 velo = { 10, 0 };
+	PhysicsObject* pO = new PhysicsObject(10, .3, 10, velo);
+	pEngine.applyVelocity(&position, pO->velocity, .5);
+
+	if (position.x-100 <= FLT_EPSILON) {
+		printf("The value didn't change for x position!\n");
+	}
+	if (position.y-100 >= FLT_EPSILON) {
+		printf("The value of y should be 100, it's not!\n");
+	}
+
+	printf("Values! x : %f y: %f\n", position.x, position.y);
 }
 
 //testing physics engine when coupled with graphic OBjects
@@ -242,4 +250,5 @@ void testPhysics() {
 	PhysicsEngine newPE;
 	printf("Beginning physics test with both engines! \n");
 	testAABBwithGraphics(newGE, newPE);
+	waitForPress();
 }

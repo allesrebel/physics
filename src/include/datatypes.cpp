@@ -213,15 +213,30 @@ GraphicsObject* Figure::getGraphicsObject(AABB* seeking) {
 	return NULL;
 }
 
-PhysicsObject::PhysicsObject(float m, float res, float dens, Vec2 vel, float angle) {
+PhysicsObject::PhysicsObject(float m, float res, float dens, Vec2 vel) {
 	mass = m;
 
 	if (m == 0) invMass = 0;
 	else invMass = 1 / m;
 
-	this->angle = angle;
-
 	resitution = res;
 	density = dens;
 	velocity = vel;
+}
+
+/*
+ * Multiplcation operator. Multiplies a vector with a scalar;
+ */
+Vec2 Vec2::operator* (float scalr) {
+	Vec2 newVec = {this->x * scalr, this->y * scalr};
+	return newVec;
+}
+
+/*
+ * Addition operator, just adds together two vectors's components
+ * and returns a new vector with the result
+ */
+Vec2 Vec2::operator +(const Vec2& other) {
+	Vec2 result = { this->x + other.x , this->y + other.y};
+	return result;
 }
